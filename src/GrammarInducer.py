@@ -74,14 +74,29 @@ class GrammarInducer:
                     conn_pos = this_rule.index(conn)
                     swapped_connector = self.swap_rule([conn])
                     this_rule.pop(conn_pos)
-                    this_rule.insert(conn_pos, swapped_connector)
-                    linked_disj.append(this_rule)
+                    this_rule.insert(conn_pos, swapped_connector[0])
+                    linked_disj.append(this_rule[:])
                 else:
                     linked_disj.append(this_rule)
             self.mod_grammar[linked_class[0]] = linked_disj  # Substitutes original rule
         print(f"Original grammar {self.sampler.disj_dict}")
         print(f"Modified grammar {self.mod_grammar}")
 
+def test_modify_grammar():
+    test_inducer = GrammarInducer('../grammars/gram1.grammar')
+
+    print(test_inducer.sampler.disj_dict)
+    test_class, test_rule = test_inducer.choose_specific_rule(1, 1)
+    inducer.modify_grammar(test_class, test_rule)
+
+    expected_modified_grammar = {
+        0: [[(0, 1)], [(1, 0)], [(5, 0), (0, 1)], [(5, 0), (1, 0)], [(3, 0), (5, 0), (0, 1)], [(3, 0), (5, 0), (1, 0)]],
+        1: ([(0, 1)], [(1, 0), (2, 1)], [(0, 1), (1, 4)], [(0, 1), (1, 2), (1, 4)]),
+        2: [[(1, 2)], [(2, 1)], [(5, 2), (1, 2)], [(5, 2), (2, 1)], [(3, 2), (5, 2), (1, 2)], [(3, 2), (5, 2), (2, 1)]],
+        3: ([(3, 2)], [(3, 0)]),
+        4: ([(1, 4)],),
+        5: ([(5, 0)], [(5, 2)])}
+    assert test_inducer.mod_grammar == expected_modified_grammar
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Grammar Induction using transformers')
@@ -92,11 +107,12 @@ if __name__ == '__main__':
     inducer = GrammarInducer(args.grammar)
 
     print(inducer.sampler.disj_dict)
-    # rand_class, rand_rule = inducer.choose_random_rule()
-    rand_class, rand_rule = inducer.choose_specific_rule(1, 1)
+    rand_class, rand_rule = inducer.choose_random_rule()
+    # rand_class, rand_rule = inducer.choose_specific_rule(1, 1)
 
     inducer.modify_grammar(rand_class, rand_rule)
 
     # inducer.generate_sentences(node=rand_class, rule=rand_rule, num_sents=5)
 
+    test_modify_grammar()
 
