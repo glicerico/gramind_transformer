@@ -14,9 +14,10 @@ class GrammarInducer:
     """
 
     def __init__(self, grammar_file, pretrained_model='bert-base-uncased', device_number='cuda:2', use_cuda=False):
-        self.orig_grammar = Grammar(grammar_file)
+        self.grammar_file = grammar_file
+        self.orig_grammar = Grammar(self.grammar_file)
         self.orig_sampler = GrammarSampler(self.orig_grammar)
-        self.mod_grammar = Grammar(grammar_file)  # Local grammar for testing new rules
+        self.mod_grammar = Grammar(self.grammar_file)  # Local grammar for testing new rules
         self.mod_sampler = None
         self.valid_rules = {}
 
@@ -32,7 +33,8 @@ class GrammarInducer:
         """
         Reset grammar to the one from GrammarSampler instance
         """
-        self.mod_sampler = GrammarSampler(self.orig_grammar)
+        self.mod_grammar = Grammar(self.grammar_file)
+        self.mod_sampler = GrammarSampler(self.mod_grammar)
 
     def choose_random_rule(self, chosen_class=None):
         if chosen_class is None:
@@ -128,9 +130,10 @@ class GrammarInducer:
 
         if verbose:
             print(f"Original sentences: {orig_sents}")
-            print(f"Original score: {orig_score}")
             print(f"Modified sentences: {mod_sents}")
-            print(f"Modified score: {mod_score}")
+
+        print(f"Original score: {orig_score}")
+        print(f"Modified score: {mod_score}")
 
         # Accept rule if modified rule lowers sentences score below threshold
         if mod_score / orig_score < threshold:
