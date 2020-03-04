@@ -139,6 +139,10 @@ class GrammarInducer:
         if mod_score / orig_score < threshold:
             print(f"Rule is accepted!: {this_rule}")
             self.valid_rules[this_class].append(this_rule)
+        else:
+            print(f"Rule is rejected!: {this_rule}")
+
+        return orig_score, mod_score
 
 
 if __name__ == '__main__':
@@ -157,10 +161,14 @@ if __name__ == '__main__':
     # orig_sents = inducer.generate_sentences(inducer.orig_sampler, node=rand_class, rule=rand_rule, num_sents=args.sents,
     #                                         verbose=args.verbose)
     # orig_score = inducer.evaluate_sentences(orig_sents)
+    scores = {}  # Store scores for each rule
     for curr_class, class_rules in inducer.orig_sampler.disj_dict.items():
         inducer.valid_rules[curr_class] = []  # Build valid rules dictionary
+        scores[curr_class] = []
         for curr_rule in class_rules:
-            inducer.evaluate_rule(curr_class, curr_rule, num_sents=args.sents, threshold=args.thres)
+            orig_score, mod_score = inducer.evaluate_rule(curr_class, curr_rule, num_sents=args.sents, threshold=args.thres, verbose=args.verbose)
+            scores[curr_class].append((orig_score, mod_score, mod_score / orig_score))
 
     print(f"Accepted rules:")
     print(inducer.valid_rules)
+    print(f"Scores: {scores}")
