@@ -111,7 +111,7 @@ class GrammarInducer:
         mean_score = 0
         for sent in sents:
             tokens = self.lm.tokenize_sent(sent)
-            mean_score += self.lm.get_sentence_prob_directional(tokens, verbose=verbose)
+            mean_score += self.lm.get_sentence_prob_normalized(tokens, norm_dict, verbose=verbose)
         return mean_score / len(sents)
 
     def evaluate_rule(self, this_class, this_rule, num_sents=5, threshold=0.8, verbose=False):

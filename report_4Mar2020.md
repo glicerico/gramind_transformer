@@ -53,11 +53,12 @@ This methodology was proposed by Ben as a way to "clean" the rules generated
 by the language-learning pipeline, or some other mechanism.
 In that sense, a way to test it is to take a good grammar, add spurious rules to
 it, and check if the algorithm is able to discriminate them.
-
+****
+## Experiment
 So, I modified [gram1](grammars/gram1.grammar) into 
 [badgram1](grammars/badgram1.grammar)
 and ran the algorithm on it.
-The are good for a first try: out of 21 rules (15 good ones vs 6 spurious ones),
+They are good for a first try: out of 21 rules (15 good ones vs 6 spurious ones),
 the algorithm concluded that 12 of them were valid (12 good ones vs 0 bad ones).
 ********
 
