@@ -111,7 +111,7 @@ class GrammarInducer:
         mean_score = 0
         for sent in sents:
             tokens = self.lm.tokenize_sent(sent)
-            mean_score += self.lm.get_sentence_prob_normalized(tokens, norm_dict, verbose=verbose)
+            mean_score += self.lm.get_sentence_prob_normalized(tokens, verbose=verbose)
         return mean_score / len(sents)
 
     def evaluate_rule(self, this_class, this_rule, num_sents=5, threshold=0.8, verbose=False):
@@ -151,10 +151,16 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', action='store_true', help='Print processing info?')
     parser.add_argument('--sents', default=5, type=int, help='Num of sentences to generate per rule')
     parser.add_argument('--thres', default=0.8, type=float, help='Min ratio of quality drop to accept a rule')
+    parser.add_argument('--norm_file', type=str, help='Sentences file to use for normalization')
+    parser.add_argument('--norm_pickle', type=str, help='Pickle file to use for normalization')
 
     args = parser.parse_args()
 
     inducer = GrammarInducer(args.grammar)
+
+    # Calculate normalization scores if option is present
+    if args.norm_file:
+        inducer.lm.calculate_norm_dict(args.norm_file)
 
     # rand_class, rand_rule = inducer.choose_random_rule()
     # rand_class, rand_rule = inducer.choose_specific_rule(1, 1)  # For testing purposes
