@@ -1,6 +1,7 @@
 import argparse
 import sys
 import random
+import numpy as np
 
 REPOS = "/home/andres/repositories/"
 sys.path.insert(0, REPOS)
@@ -114,7 +115,7 @@ class GrammarInducer:
             mean_score += self.lm.get_sentence_prob_normalized(tokens, verbose=verbose)
         return mean_score / len(sents)
 
-    def evaluate_rule(self, this_class, this_rule, num_sents=5, threshold=0.8, verbose=False):
+    def evaluate_rule(self, this_class, this_rule, num_sents=5, threshold=0.8, verbose=False, lf=None):
         self.reset_grammar()
         # Generate and evaluate sentences with rule
         orig_sents = inducer.generate_sentences(inducer.orig_sampler, node=this_class, rule=this_rule,
@@ -138,9 +139,13 @@ class GrammarInducer:
         # Accept rule if modified rule lowers sentences score below threshold
         if mod_score / orig_score < threshold:
             print(f"Rule is accepted!: {this_rule}")
+            lf.write("Rule is accepted!: ")
+            np.savetxt(lf, this_rule, fmt="(%s, %s)", newline=", ")
             self.valid_rules[this_class].append(this_rule)
         else:
             print(f"Rule is rejected!: {this_rule}")
+            lf.write("Rule is rejected!: ")
+            np.savetxt(lf, this_rule, fmt="(%s, %s)", newline=", ")
 
         return orig_score, mod_score
 
@@ -161,20 +166,25 @@ if __name__ == '__main__':
     # Calculate normalization scores if option is present
     if args.norm_file:
         inducer.lm.calculate_norm_dict(args.norm_file)
+        print("Normalization scores:")
+        print(inducer.lm.norm_dict)
 
     # rand_class, rand_rule = inducer.choose_random_rule()
     # rand_class, rand_rule = inducer.choose_specific_rule(1, 1)  # For testing purposes
     # orig_sents = inducer.generate_sentences(inducer.orig_sampler, node=rand_class, rule=rand_rule, num_sents=args.sents,
     #                                         verbose=args.verbose)
     # orig_score = inducer.evaluate_sentences(orig_sents)
+    logfile = open("logfile.log", 'w')
     scores = {}  # Store scores for each rule
     for curr_class, class_rules in inducer.orig_sampler.disj_dict.items():
+        logfile.write("Class: " + str(curr_class) + "\n")
         inducer.valid_rules[curr_class] = []  # Build valid rules dictionary
         scores[curr_class] = []
         for curr_rule in class_rules:
-            orig_score, mod_score = inducer.evaluate_rule(curr_class, curr_rule, num_sents=args.sents, threshold=args.thres, verbose=args.verbose)
+            orig_score, mod_score = inducer.evaluate_rule(curr_class, curr_rule, num_sents=args.sents, threshold=args.thres, verbose=args.verbose, lf=logfile)
             scores[curr_class].append((orig_score, mod_score, mod_score / orig_score))
 
+    logfile.close()
     print(f"Accepted rules:")
     print(inducer.valid_rules)
     print(f"Scores: {scores}")
