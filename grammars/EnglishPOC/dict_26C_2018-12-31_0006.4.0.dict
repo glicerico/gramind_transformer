@@ -1,0 +1,112 @@
+% Grammar Learner v.0.7 2018-12-31 13:31:27 UTC
+<dictionary-version-number>: V0v0v6+;
+<dictionary-locale>: EN4us+;
+
+% AB
+"dad" "daughter" "mom" "son":
+(ABAF+) or (ABAG+) or (ABAJ+) or (ABAK+) or (ABAL+) or (ABAM+) or (ABAO+) or (ABAS+) or (ABAU+) or (AEAB-) or (AFAB-) or (AFAB- & ABAK+) or (AUAB-) or (BBAB-) or (BBAB- & ABAJ+);
+
+% AC
+"child" "human" "parent":
+(BBAC- & ACAG+) or (BBAC- & APAC- & ACAG+) or (BBAC- & BBAC-);
+
+% AD
+"binoculars" "hammer" "telescope":
+(ADAX+) or (ADBA+) or (AKAD-) or (BBAD-) or (BBAD- & ADAX+) or (BBAD- & AKAD-) or (BBAD- & AYAD-);
+
+% AE
+"her" "his" "to":
+(AEAW+) or (ASAE- & AEAB+) or (AUAE- & AEAB+ & AEAW+) or (AUAE- & AEAW+);
+
+% AF
+"saw" "sees":
+(ABAF- & AFAB+) or (ABAF- & AFAB+ & AFAG+) or (AFAB+ & AFAG+) or (BBAF-);
+
+% AG
+"before" "now":
+(ACAG-) or (AFAG-) or (AFAG- & ABAG-) or (AHAG-) or (AJAG-) or (ALAG-);
+
+% AH
+"cake" "sausage":
+(AHAL+) or (AJAH-) or (AJAH- & AHAG+);
+
+% AJ
+"liked" "likes":
+(ABAJ- & AJAH+) or (ABAJ- & AJAH+ & AJAG+);
+
+% AK
+"has" "with":
+(ABAK- & AKAD+) or (ABAK- & AKBB+) or (AKAN+) or (AYAK-) or (AYAK- & AKBB+);
+
+% AL
+"food" "was":
+(ABAL- & ALAP+) or (ABAL- & ALBB+ & ALAG+) or (AHAL- & ALAL+) or (BBAL- & AHAL-) or (BBAL- & AHAL- & ALAG+) or (BBAL- & ALAL- & ALAG+);
+
+% AM
+"knocked" "sawed":
+(ABAM- & AMAY+);
+
+% AN
+"chalk":
+(AKAN- & ASAN- & ANAT+);
+
+% AO
+"is":
+(ABAO- & AOAT+) or (ABAO- & AOBB+) or (AOBB+);
+
+% AP
+"not":
+(ALAP- & APAC+);
+
+% AQ
+"the":
+(AQAY+) or (ATAQ- & AQAR+);
+
+% AR
+"board":
+(AQAR-) or (AQAR- & ARAV+);
+
+% AS
+"writes":
+(ABAS- & ASAE+ & ASAN+) or (ABAS- & ASAN+);
+
+% AT
+"on":
+(ANAT- & ATAQ+) or (AOAT- & ATAQ+) or (AWAT- & ATAQ+);
+
+% AU
+"wants":
+(ABAU- & AUAB+ & AUAE+) or (ABAU- & AUAE+);
+
+% AV
+"of":
+(ARAV- & AVAZ+);
+
+% AW
+"be":
+(AEAW- & AEAW- & AWAT+) or (AEAW- & AWAT+);
+
+% AX
+"tool":
+(BAAX-) or (BBAX-) or (BBAX- & ADAX-);
+
+% AY
+"wood":
+(AQAY- & AMAY- & AYAK+) or (AQAY- & AMAY- & AYAK+ & AYAD+);
+
+% AZ
+"directors":
+(AVAZ-);
+
+% BA
+"are":
+(ADBA- & BABB+ & BAAX+);
+
+% BB
+"a":
+(AKBB- & BBAD+) or (AKBB- & BBAF+) or (ALBB- & BBAB+) or (AOBB- & BBAC+) or (AOBB- & BBAL+) or (AOBB- & BBAX+) or (BABB-) or (BBAB+) or (BBAC+) or (BBAD+) or (BBAL+);
+
+<UNKNOWN-WORD>: XXX+;
+
+% 26 word clusters, 26 Link Grammar rules.
+% Link Grammar file saved to: /home/obaskov/94/language-learning/output/POC-English-2018-12-31/POC-English-Amb_R=6-Weight=6:R-mst-weight=+1:R_cDRKd_gen-rules/dict_26C_2018-12-31_0006.4.0.dict

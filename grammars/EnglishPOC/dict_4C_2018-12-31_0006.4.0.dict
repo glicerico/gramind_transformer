@@ -1,0 +1,24 @@
+% Grammar Learner v.0.7 2018-12-31 13:40:16 UTC
+<dictionary-version-number>: V0v0v6+;
+<dictionary-locale>: EN4us+;
+
+% B
+"a" "binoculars" "dad" "daughter" "food" "hammer" "mom" "parent" "saw" "son" "telescope" "tool":
+(BB+) or (BB+ & BB+) or (BB+ & BC+) or (BB+ & BE+) or (BB-) or (BB- & BB+ & BE+) or (BB- & BB-) or (BB- & BC+) or (BB- & BE+) or (BB- & CB-) or (BB- & EB-) or (BB- & EB- & BE+) or (BC+) or (BC+ & BB+) or (BD+) or (BE+) or (BE+ & BB+) or (CB-) or (CB- & BB+) or (DB-) or (DB- & BE+) or (EB-) or (EB- & BB+);
+
+% C
+"are" "be" "knocked" "likes" "on" "sawed" "sees" "the" "to" "with" "wood":
+(BC- & BC- & CB+) or (BC- & CB+ & CB+) or (BC- & CB+ & CE+) or (BC- & CC+ & CC+) or (BC- & CE+) or (CC+) or (CC-) or (CC- & CB+) or (CC- & CC+) or (CC- & CC+ & CB+) or (CC- & CD+) or (CC- & DC- & CC+) or (DC- & CB+) or (DC- & CC+) or (DC- & CD+) or (EC- & CC+);
+
+% D
+"board" "chalk" "child" "directors" "her" "his" "human" "liked" "not" "of" "wants" "writes":
+(BD- & DB+ & DC+) or (BD- & DC+) or (BD- & DC+ & DC+) or (BD- & DD+) or (BD- & DE+ & DE+) or (BD- & ED- & BD-) or (BD- & ED- & DE+) or (CD-) or (CD- & DC+) or (CD- & DD+) or (DD-) or (DD- & DB+ & DC+) or (DD- & DD+) or (ED- & DB+ & DB+);
+
+% E
+"before" "cake" "has" "is" "now" "sausage" "was":
+(BE-) or (BE- & BE-) or (BE- & EB+) or (BE- & EB+ & EB+ & EE+) or (BE- & EC+) or (BE- & ED+) or (BE- & EE-) or (CE-) or (CE- & EE+) or (DE-) or (EB+) or (EE+) or (EE-) or (EE- & EB+);
+
+<UNKNOWN-WORD>: XXX+;
+
+% 4 word clusters, 4 Link Grammar rules.
+% Link Grammar file saved to: /home/obaskov/94/language-learning/output/POC-English-2018-12-31/POC-English-Amb_LG-ANY-all-parses_dDRKd_no-gen/dict_4C_2018-12-31_0006.4.0.dict

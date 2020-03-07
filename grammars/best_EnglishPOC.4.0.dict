@@ -1,0 +1,110 @@
+% Grammar Learner v.0.7 2018-12-31 13:31:27 UTC
+%<dictionary-version-number>: V0v0v6+;
+%<dictionary-locale>: EN4us+;
+
+% Class 0
+dad daughter mom son:
+(C0_4+) or (C0_5+) or (C0_7+) or (C0_8+) or (C0_9+) or (C0_10+) or (C0_12+) or (C0_16+) or (C0_18+) or (C3_0-) or (C4_0-) or (C4_0- & C0_8+) or (C18_0-) or (C25_0-) or (C25_0- & C0_7+);
+
+% Class 1
+child human parent:
+(C25_1- & C1_5+) or (C25_1- & C13_1- & C1_5+) or (C25_1- & C25_1-);
+
+% Class 2
+binoculars hammer telescope:
+(C2_21+) or (C2_24+) or (C8_2-) or (C25_2-) or (C25_2- & C2_21+) or (C25_2- & C8_2-) or (C25_2- & C22_2-);
+
+% Class 3
+her his to:
+(C3_20+) or (C16_3- & C3_0+) or (C18_3- & C3_0+ & C3_20+) or (C18_3- & C3_20+);
+
+% Class 4
+saw sees:
+(C0_4- & C4_0+) or (C0_4- & C4_0+ & C4_5+) or (C4_0+ & C4_5+) or (C25_4-);
+
+% Class 5
+before now:
+(C1_5-) or (C4_5-) or (C4_5- & C0_5-) or (C6_5-) or (C7_5-) or (C9_5-);
+
+% 6
+cake sausage:
+(C6_9+) or (C7_6-) or (C7_6- & C6_5+);
+
+% 7
+liked likes:
+(C0_7- & C7_6+) or (C0_7- & C7_6+ & C7_5+);
+
+% 8
+has with:
+(C0_8- & C8_2+) or (C0_8- & C8_25+) or (C8_11+) or (C22_8-) or (C22_8- & C8_25+);
+
+% 9
+food was:
+(C0_9- & C9_13+) or (C0_9- & C9_25+ & C9_5+) or (C6_9- & C9_9+) or (C25_9- & C6_9-) or (C25_9- & C6_9- & C9_5+) or (C25_9- & C9_9- & C9_5+);
+
+% 10
+knocked sawed:
+(C0_10- & C10_22+);
+
+% 11
+chalk:
+(C8_11- & C16_11- & C11_17+);
+
+% 12
+is:
+(C0_12- & C12_17+) or (C0_12- & C12_25+) or (C12_25+);
+
+% 13
+not:
+(C9_13- & C13_1+);
+
+% 14
+the:
+(C14_22+) or (C17_14- & C14_15+);
+
+% 15
+board:
+(C14_15-) or (C14_15- & C15_19+);
+
+% 16
+writes:
+(C0_16- & C16_3+ & C16_11+) or (C0_16- & C16_11+);
+
+% 17
+on:
+(C11_17- & C17_14+) or (C12_17- & C17_14+) or (C20_17- & C17_14+);
+
+% 18
+wants:
+(C0_18- & C18_0+ & C18_3+) or (C0_18- & C18_3+);
+
+% 19
+of:
+(C15_19- & C19_23+);
+
+% 20
+be:
+(C3_20- & C3_20- & C20_17+) or (C3_20- & C20_17+);
+
+% 21
+tool:
+(C24_21-) or (C25_21-) or (C25_21- & C2_21-);
+
+% 22
+wood:
+(C14_22- & C10_22- & C22_8+) or (C14_22- & C10_22- & C22_8+ & C22_2+);
+
+% 23
+directors:
+(C19_23-);
+
+% 24
+are:
+(C2_24- & C24_25+ & C24_21+);
+
+% 25
+a:
+(C8_25- & C25_2+) or (C8_25- & C25_4+) or (C9_25- & C25_0+) or (C12_25- & C25_1+) or (C12_25- & C25_9+) or (C12_25- & C25_21+) or (C24_25-) or (C25_0+) or (C25_1+) or (C25_2+) or (C25_9+);
+
+% 26 word clusters, 26 Link Grammar rules.
+% Link Grammar file saved to: /home/obaskov/94/language-learning/output/P_OC-English-2018-12-31/P_OC-English-Amb_R=6-Weight=6:R-mst-weight=+1:R_cDRKd_gen-rules/dict_26C_2018-12-31_0006.4.0.dict
