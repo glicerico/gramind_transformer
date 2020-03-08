@@ -52,13 +52,13 @@ After this experiment I decided to generate sentences from the
 [tiniest grammar](grammars/tiniest.dict),
 then run ULL pipeline to learn a grammar, then clean them. 
 If sentences generated from this grammar are good, this could possible work better
-and complete a whole loop: 
-a) sentence generation from a hand-coded grammar (replacing a corpus)
-b) parsing
-c) grammar learning
-d) sentence generation from learned grammar
-d) grammar cleaning
-e) sentence generation from cleaned grammar
+and complete a whole loop:
+- sentence generation from a hand-coded grammar (alternatively use a corpus)
+- parsing
+- grammar learning
+- sentence generation from learned grammar
+- grammar cleaning
+- sentence generation from cleaned grammar
 
 For this, I modified the [sentence generator](https://github.com/glicerico/rangram)
 design to handle dictionaries that are closer to LG-type rules, to avoid editing
@@ -111,3 +111,84 @@ that these were indeed also possible in the original tiny grammar.
 Given the situation, I decided to try running the full loop mentioned above,
 but starting from the
 very simple [gram1.grammar](grammars/gram1.grammar).
+
+I generated the [full corpus](grammars/gram1_full.corpus) (all possible grammatical
+sentences) from the grammar.
+Then, the stream-parser produces better parses (76.83%) than sequential (69.7%)
+and the ULL parser (63.68%), but still not perfect.
+So, using the stream-parser parses, two learned grammars (from two different methods)
+were obtained, both achieving F1 scores of 76.83%, so learning perfectly from
+the faulty parses.
+The so-called "Identical Lexical Entries" grammar is quite trivial:
+```
+% B
+"candy" "kids" "quickly" "small" "the":
+(BB+) or (BB-) or (BB- & BB- & BC+) or (BB- & BC+) or (BC+) or (CB-) or (CB- & BB+);
+
+% C
+"eat":
+(BC-) or (BC- & CB+) or (BC- & CB+ & CB+);
+```
+On the other hand, the "Agglomerative Lexical Entries" grammar is closer
+to the original one:
+```
+% B
+"candy":
+(CB-) or (CB- & BE+);
+
+% C
+"eat":
+(DC-) or (DC- & CB+) or (DC- & CE+) or (DC- & CG+ & CB+);
+
+% D
+"kids":
+(DC+) or (FD- & GD- & DC+) or (GD- & DC+);
+
+% E
+"quickly":
+(BE-) or (CE-);
+
+% F
+"small":
+(FD+) or (GF-);
+
+% G
+"the":
+(CG-) or (CG- & GF+) or (GD+);
+```
+It's worth noting that many rules are wrong, but they appear there because
+the unsupervised parses were not perfect, and the wrong links there made
+their way to the grammar.
+
+Generating the full corpus from this grammar, we get 6 more sentences than
+with the original grammar.
+Those are sentences involving wrong rules, like:
+```
+the small kids eat the candy quickly small.
+1 the 3 kids
+2 small 3 kids
+3 kids 4 eat
+4 eat 5 the
+4 eat 6 candy
+5 the 8 small
+6 candy 7 quickly
+```
+
+So, there is room for these learned grammars to be cleaned of faulty rules.
+I implemented sentence probability normalization through sentence length, but
+there is some bug that I didn't get to explore which is giving probabilities that
+are way off; will investigate shortly.
+For the sake of this report, I applied the previous sentence probability that
+normalizes using a geometric mean.
+Using that, the grammar cleaner discarded two rules from this grammar:
+One that is not gramatically incorrect, which allowed to produce sentences like
+"kids eat".
+The other one is the possibility of a link between "the" and "small".
+So, the rejection is not bad, but it did miss some of the other rules which are
+not grammatical.
+
+On the other hand, it is impossible to fix the grammar by only "cleaning" 
+rules, as the algorithm currently cannot create the correct needed rules
+without a mechanism for 
+ new rule generation and testing.
+

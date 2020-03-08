@@ -64,6 +64,17 @@ class GrammarInducer:
         :return:
         """
         new_rule = [(y, x) for x, y in original_rule]  # Inverts all connectors in rule (and their word order)
+        # new_rule = []
+        # for conn in original_rule:
+        #     direction = conn[-1]
+        #     if direction == '+':
+        #         direction = '-'
+        #     elif direction == '-':
+        #         direction = '+'
+        #     else:
+        #         print("ERROR: Bad rule format!")
+        #         exit(1)
+        #     new_rule.append(conn[:-1] + direction)
         return new_rule
 
     def swap_grammar(self, root_category, old_rule, verbose=False):
@@ -112,7 +123,8 @@ class GrammarInducer:
         mean_score = 0
         for sent in sents:
             tokens = self.lm.tokenize_sent(sent)
-            mean_score += self.lm.get_sentence_prob_normalized(tokens, verbose=verbose)
+            # mean_score += self.lm.get_sentence_prob_normalized(tokens, verbose=verbose)
+            mean_score += self.lm.get_sentence_prob_directional(tokens, verbose=verbose)
         return mean_score / len(sents)
 
     def evaluate_rule(self, this_class, this_rule, num_sents=5, threshold=0.8, verbose=False, lf=None):
