@@ -1,3 +1,7 @@
+# 4 Mar, 2020
+Wrote and sent a [report](report_4Mar2020.md) about first work with inducer.
+**************
+
 # 6 Mar, 2020
 
 I picked a "good enough" EnglishPOC [grammar](http://88.99.210.144/data/clustering_2019/POC-English-2018-12-31/POC-English-Amb_R=6-Weight=6:R-mst-weight=+1:R_cDRKd_gen-rules/dict_26C_2018-12-31_0006.4.0.dict),
@@ -14,7 +18,7 @@ the grammar categories) and clean them.
 
 After cleaning the rules, I notice that among the rejected rules, many involve
 the badly formed word categories, which seems good.
-After generating sentences from this cleaned grammar, they seem better.
+After generating sentences from this cleaned grammar, they seem a bit better.
 
 
 Some possible error sources:
@@ -32,8 +36,45 @@ c) grammar learning
 d) grammar cleaning
 e) sentence generation
 
+## Mar 7, 2020
+
 Another possible path to try:
 Starting from the [full corpus](grammars/gram1_full.corpus) generated from my 
 [gram1](grammars/gram1.grammar), parse it and generate a grammar, then pass
 it through the grammar inducer cleaner, and see if it improves :)
+
+Currently: Trying full loop with gram1. Errors with sed expression in grammar
+learner json file... it doesn't run because it doesn't recognize some option.
+
+****************
+## Mar 8, 2020
+
+Problem with sed was because sed expression doesn't appropriately handle full 
+paths to dictionary. 
+It has to use a dictionary in the same folder.
+Workaround by copying dictionary of interest to working folder.
+
+Stream-parser produces better parses (76.83%) than sequential (69.7%), 
+but still not perfect.
+Seems hard to generate the correct rules here without a mechanism for new rule
+generation.
+However, looking at the generated sentences, there may be one or two rules which
+could be rejected, so let's pass it through the grammar cleaner.
+
+Additionally, redesigned sentence generator to handle LG-type rules, and be able
+to process files like tiniest.dict, which should prove more interesting for testing.
+However, I still need to handle specific connectors to match more general ones;
+i.e. "Aa+" should be able to match with "A-".
+Attempted expanding each specific connector into rules with more general ones,
+but later realized this is faulty.
+What we need is to be able to match those different specification levels when
+looking for the linked category.
+
+Update, implemented those changes and now generation can use LG-type rules.
+********
+
+After many experiments using LG dictionaries for sentence generation, it's clear
+we need some extra rules to avoid infinite/very long recursion in the rules, 
+since those produce sentences which are quite useful.
+
 
