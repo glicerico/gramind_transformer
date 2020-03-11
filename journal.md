@@ -78,3 +78,28 @@ we need some extra rules to avoid infinite/very long recursion in the rules,
 since those produce sentences which are quite useful.
 
 
+**************
+## Mar 10, 2020
+
+After experimenting with learned grammars from different corpora, I realize the
+grammar learning algorithm doesn't work for our current POC purposes:
+One grammar learning option is using ALE, which clusters words and then agglomerates
+ all the rules pertaining to those words in the same category, which causes
+ havoc in the sentence formation.
+Alternatively, the ILE method produces grammars which, although incorrect
+syntactically, are quite good at reproducing word order in the sentences, since
+ they are built according to links coming from unsupervised parsing.
+Because such rules reproduce word order just fine, the current implementation 
+of the grammar cleaner seems ineffective in fixing a grammar containing them.
+
+On the other hand, as shown previously, when adding random spurious rules by hand, 
+the grammar cleaner seems to reject them more reliably.
+In this respect, a good example for a POC is one I showed in a 
+[previous report](report_4Mar2020.md):
+
+So, I modified [gram1](grammars/gram1.grammar) into 
+[badgram1](grammars/badgram1.grammar)
+and ran the algorithm on it.
+They are good for a first try: out of 21 rules (15 good ones vs 6 spurious ones),
+the algorithm concluded that 12 of them were valid (12 good ones vs 0 bad ones).
+
