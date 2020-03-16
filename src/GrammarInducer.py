@@ -1,6 +1,8 @@
 import argparse
+import pickle
 import sys
 import random
+import numpy as np
 
 REPOS = "/home/andres/repositories/"
 sys.path.insert(0, REPOS)
@@ -12,8 +14,7 @@ class GrammarInducer:
     """
     Induces a grammar by leveraging transformers
     """
-
-    def __init__(self, grammar_file, pretrained_model='bert-base-uncased', device_number='cuda:2', use_cuda=False):
+    def __init__(self, grammar_file, pretrained_model='bert-large-uncased', device_number='cuda:2', use_cuda=False):
         self.grammar_file = grammar_file
         self.orig_grammar = Grammar(self.grammar_file)
         self.orig_sampler = GrammarSampler(self.orig_grammar)
@@ -63,6 +64,17 @@ class GrammarInducer:
         :return:
         """
         new_rule = [(y, x) for x, y in original_rule]  # Inverts all connectors in rule (and their word order)
+        # new_rule = []
+        # for conn in original_rule:
+        #     direction = conn[-1]
+        #     if direction == '+':
+        #         direction = '-'
+        #     elif direction == '-':
+        #         direction = '+'
+        #     else:
+        #         print("ERROR: Bad rule format!")
+        #         exit(1)
+        #     new_rule.append(conn[:-1] + direction)
         return new_rule
 
     def swap_grammar(self, root_category, old_rule, verbose=False):
@@ -108,19 +120,25 @@ class GrammarInducer:
         :param verbose:
         :return:
         """
-        mean_score = 0
+        # mean_score = 0
+        log_mean_score = 0
         for sent in sents:
             tokens = self.lm.tokenize_sent(sent)
-            mean_score += self.lm.get_sentence_prob_directional(tokens, verbose=verbose)
-        return mean_score / len(sents)
+            # mean_score += self.lm.get_sentence_prob_normalized(tokens, verbose=verbose)
+            log_mean_score += np.log10(self.lm.get_sentence_prob_normalized(tokens, verbose=verbose))
+            # mean_score += self.lm.get_sentence_prob_directional(tokens, verbose=verbose)
+        # return mean_score / len(sents)
+        return np.power(10, log_mean_score / len(sents))
 
-    def evaluate_rule(self, this_class, this_rule, num_sents=5, threshold=0.8, verbose=False):
+    def evaluate_rule(self, this_class, this_rule, num_sents=5, threshold=0.8, verbose=False, lf=None):
         self.reset_grammar()
         # Generate and evaluate sentences with rule
+        print("Evaluate original sentences:")
         orig_sents = inducer.generate_sentences(inducer.orig_sampler, node=this_class, rule=this_rule,
                                                 num_sents=num_sents, verbose=args.verbose)
         orig_score = inducer.evaluate_sentences(orig_sents)
 
+        print("Evaluate modified sentences:")
         # Generate and evaluate sentences with modified rule
         swapped_rule = inducer.swap_grammar(this_class, this_rule, verbose=args.verbose)
         inducer.init_mod_sampler()
@@ -138,11 +156,42 @@ class GrammarInducer:
         # Accept rule if modified rule lowers sentences score below threshold
         if mod_score / orig_score < threshold:
             print(f"Rule is accepted!: {this_rule}")
+            lf.write("Rule is accepted!: ")
+            np.savetxt(lf, this_rule, fmt="(%s, %s)", newline=", ")
             self.valid_rules[this_class].append(this_rule)
         else:
             print(f"Rule is rejected!: {this_rule}")
+            lf.write("Rule is rejected!: ")
+            np.savetxt(lf, this_rule, fmt="(%s, %s)", newline=", ")
 
         return orig_score, mod_score
+
+    def load_norm_scores(self, pickle_norm, norm_file):
+        """
+        If pickle file is present, load data; else, calculate it.
+        """
+        try:
+            with open(pickle_norm, 'rb') as h:
+                self.lm.norm_dict = pickle.load(h)
+
+                print("NORMALIZATION SCORES FOUND!")
+
+        except:
+            print("NORMALIZATION SCORES File Not Found!! \n")
+            print("Performing calculation...")
+
+            if norm_file != '':
+                self.lm.calculate_norm_dict(norm_file)
+                print("Normalization scores:")
+                print(self.lm.norm_dict)
+            else:
+                print("Calculations without normalization scores:")
+                self.lm.norm_dict = {}
+
+            with open(pickle_norm, 'wb') as h:
+                pickle.dump(self.lm.norm_dict, h)
+
+            print("Data stored in " + pickle_norm)
 
 
 if __name__ == '__main__':
@@ -151,24 +200,33 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', action='store_true', help='Print processing info?')
     parser.add_argument('--sents', default=5, type=int, help='Num of sentences to generate per rule')
     parser.add_argument('--thres', default=0.8, type=float, help='Min ratio of quality drop to accept a rule')
+    parser.add_argument('--norm_file', type=str, default='', help='Sentences file to use for normalization')
+    parser.add_argument('--norm_pickle', type=str, default='test.pickle', help='Pickle file to use for normalization')
 
     args = parser.parse_args()
 
     inducer = GrammarInducer(args.grammar)
+
+    # Calculate normalization scores if option is present
+    inducer.load_norm_scores(args.norm_pickle, args.norm_file)
 
     # rand_class, rand_rule = inducer.choose_random_rule()
     # rand_class, rand_rule = inducer.choose_specific_rule(1, 1)  # For testing purposes
     # orig_sents = inducer.generate_sentences(inducer.orig_sampler, node=rand_class, rule=rand_rule, num_sents=args.sents,
     #                                         verbose=args.verbose)
     # orig_score = inducer.evaluate_sentences(orig_sents)
+    logfile = open("logfile.log", 'w')
+    # inducer.evaluate_rule(0, [(3, 0)], 10, lf=logfile)
     scores = {}  # Store scores for each rule
     for curr_class, class_rules in inducer.orig_sampler.disj_dict.items():
+        logfile.write("Class: " + str(curr_class) + "\n")
         inducer.valid_rules[curr_class] = []  # Build valid rules dictionary
         scores[curr_class] = []
         for curr_rule in class_rules:
-            orig_score, mod_score = inducer.evaluate_rule(curr_class, curr_rule, num_sents=args.sents, threshold=args.thres, verbose=args.verbose)
+            orig_score, mod_score = inducer.evaluate_rule(curr_class, curr_rule, num_sents=args.sents, threshold=args.thres, verbose=args.verbose, lf=logfile)
             scores[curr_class].append((orig_score, mod_score, mod_score / orig_score))
 
+    logfile.close()
     print(f"Accepted rules:")
     print(inducer.valid_rules)
     print(f"Scores: {scores}")
