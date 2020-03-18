@@ -166,33 +166,6 @@ class GrammarInducer:
 
         return orig_score, mod_score
 
-    def load_norm_scores(self, pickle_norm, norm_file):
-        """
-        If pickle file is present, load data; else, calculate it.
-        """
-        try:
-            with open(pickle_norm, 'rb') as h:
-                self.lm.norm_dict = pickle.load(h)
-
-                print("NORMALIZATION SCORES FOUND!")
-
-        except:
-            print("NORMALIZATION SCORES File Not Found!! \n")
-            print("Performing calculation...")
-
-            if norm_file != '':
-                self.lm.calculate_norm_dict(norm_file)
-                print("Normalization scores:")
-                print(self.lm.norm_dict)
-            else:
-                print("Calculations without normalization scores:")
-                self.lm.norm_dict = {}
-
-            with open(pickle_norm, 'wb') as h:
-                pickle.dump(self.lm.norm_dict, h)
-
-            print("Data stored in " + pickle_norm)
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Grammar Induction using transformers')
@@ -208,7 +181,7 @@ if __name__ == '__main__':
     inducer = GrammarInducer(args.grammar)
 
     # Calculate normalization scores if option is present
-    inducer.load_norm_scores(args.norm_pickle, args.norm_file)
+    inducer.lm.load_norm_scores(args.norm_pickle, args.norm_file)
 
     # rand_class, rand_rule = inducer.choose_random_rule()
     # rand_class, rand_rule = inducer.choose_specific_rule(1, 1)  # For testing purposes
